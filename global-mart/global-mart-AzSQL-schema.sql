@@ -43,10 +43,10 @@ CREATE TABLE reviews
 	review_text VARCHAR(3000),
 	order_id VARCHAR(14),
 	customer_id VARCHAR(8),
-	reviews_rating INT,
+	reviews_rating INT
+	);
 
-CREATE TABLE transactions
-(
+
 CREATE TABLE transactions
 (
 	transaction_id INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
