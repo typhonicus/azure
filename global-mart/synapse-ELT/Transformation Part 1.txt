@@ -1,0 +1,46 @@
+-- new_df = customers.join(order,["Customer_Id"])
+--Creating a table from joining the customers and orders tables.
+CREATE TABLE [dbo].[custnorders]
+WITH
+(
+    DISTRIBUTION = HASH(customer_id),
+    CLUSTERED COLUMNSTORE INDEX
+)
+AS
+SELECT c.customer_id, count(o.order_id) as no_of_orders 
+FROM [dbo].[customers] as c
+JOIN [dbo].[orders] as o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id
+
+GO
+
+--Creating a table from joining the orders and transactions tables.
+CREATE TABLE [dbo].[ordersntransact]
+WITH
+(
+    DISTRIBUTION = HASH(customer_id),
+    CLUSTERED COLUMNSTORE INDEX
+)
+AS
+SELECT o.customer_id, sum(t.sales) as amnt_spent
+FROM [dbo].[orders] as o
+JOIN [dbo].[transactions] as t
+ON o.order_id = t.order_id
+GROUP BY o.customer_id
+
+GO
+
+--Creating a table from joining the orders and returns tables.
+CREATE TABLE [dbo].[ordersnreturns]
+WITH
+(
+    DISTRIBUTION = HASH(customer_id),
+    CLUSTERED COLUMNSTORE INDEX
+)
+AS
+SELECT o.customer_id, count(r.return_reason) as no_of_returns 
+FROM [dbo].[orders] as o
+JOIN [dbo].[returns] as r
+ON o.order_id = r.order_id
+GROUP BY o.customer_id

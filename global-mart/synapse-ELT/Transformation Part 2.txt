@@ -1,0 +1,30 @@
+--Creating a datediff table to use to obtain an useful metric down the line
+CREATE TABLE [dbo].[duration]
+WITH
+(
+    DISTRIBUTION = HASH(customer_id),
+    CLUSTERED COLUMNSTORE INDEX
+)
+AS
+(
+SELECT customer_id, datediff(day, min(order_purchase_date), max(order_purchase_date)) as duration
+FROM [dbo].[orders]
+GROUP BY customer_id
+)
+
+GO
+
+CREATE TABLE [dbo].[custnordersnduration]
+WITH
+(
+    DISTRIBUTION = HASH(customer_id),
+    CLUSTERED COLUMNSTORE INDEX
+)
+AS
+--join 
+SELECT c.customer_id, sum(d.duration)/sum(c.no_of_orders) as purchase_frequency 
+FROM [dbo].[duration] as d
+JOIN [dbo].[custnorders] as c
+ON d.customer_id = c.customer_id
+GROUP BY c.customer_id;
+

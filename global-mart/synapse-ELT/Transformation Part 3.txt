@@ -1,0 +1,19 @@
+CREATE TABLE [dbo].[customer_fact3]
+WITH
+(
+    DISTRIBUTION = HASH(customer_id),
+    CLUSTERED COLUMNSTORE INDEX
+)
+AS
+
+SELECT co.customer_id, co.no_of_orders, ot.amnt_spent, cd.purchase_frequency, ro.no_of_returns
+FROM [dbo].[custnorders] as co
+JOIN [dbo].[ordersntransact] as ot
+ON co.customer_id = ot.customer_id
+JOIN [dbo].[custnordersnduration] as cd
+ON ot.customer_id = cd.customer_id
+JOIN [dbo].[ordersnreturns] as ro
+ON ot.customer_id = ro.customer_id
+
+SELECT count(*)
+FROM customer_fact3
