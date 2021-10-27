@@ -1,0 +1,11 @@
+COPY INTO customers_fact2
+FROM 'https://globalmart.blob.core.windows.net/transformeddata/customer_fact'
+WITH (
+    FILE_TYPE = 'CSV',
+    CREDENTIAL=(IDENTITY= 'Storage Account Key', SECRET='tdg7xeSHRXJn9v5beHgw7k/pEEeXfzUnSbyDf5SoJ3JfH6sbWes4238CIaHuQ4fZEl/GwjZD4xr1/1pDD9+xWQ=='),
+    FIELDQUOTE = '"',
+    FIELDTERMINATOR=',',
+    ROWTERMINATOR='0x0A',
+    ENCODING = 'UTF8',
+    FIRSTROW = 2
+);

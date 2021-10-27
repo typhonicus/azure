@@ -1,0 +1,14 @@
+CREATE TABLE [dbo].[customers_fact]
+(
+	[customer_id] [nvarchar](8) NOT NULL,
+	[no_of_orders] [int] NULL,
+	[amnt_spnt] [money] NULL,
+	[purchase_frequency] [float] NULL,
+	[no_of_returns] [int] NULL
+)
+WITH
+(
+    DISTRIBUTION = HASH([customer_id]),
+    CLUSTERED COLUMNSTORE INDEX
+    --HEAP
+);
